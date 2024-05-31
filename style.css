@@ -1,0 +1,178 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Start Project */
+.container {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  width: 100%;
+  padding: 20PX 50px;
+  background-color: #295758;
+  font-family: sans-serif;
+  color: #fff;
+  @media (max-width: 992px) {
+    flex-direction: column;
+  }
+}
+/* Start Time  */
+.time{
+  .inf {
+    box-shadow: 0 0 2px 0px rgba(255, 255, 255, 0.54), 0 0 0 1px rgba(255, 255, 255, 0.24);
+    padding: 10px ;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 6px;
+    @media (max-width: 575px) {
+      flex-direction: column;
+      text-align: center;
+      gap: 5px;
+    }
+    .taxt {
+     .ctiyNmae {
+      font-size: 60px;
+      margin-bottom: 5px;
+      transition: 0.3s ;
+      @media (max-width: 575px) {
+        font-size: 40px;
+      }
+     }
+     .countryNmae {
+      font-size: 18px;
+      transition: 0.3s ;
+     }
+    }
+    .date{
+      @media (max-width: 575px) {
+        text-align: center;
+      }
+      text-align: end;
+      h3 {
+        margin: 5px 0;
+      }
+    }
+  }
+  .time_today {
+    .show {
+      display: flex;
+     gap: 10px;
+     margin: 20px 0;
+     @media (max-width: 575px) {
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+    }
+      > div{
+        width: calc(100% / 3);
+        background-color: transparent;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 120px;
+        box-shadow: rgba(255, 255, 255, 0.54) 0px 0px 2px 0px, rgba(255, 255, 255, 0.24) 0px 0px 0px 1px;
+        border-radius: 6px;
+        img {
+          width: 40px;
+        }
+        h3 {
+          font-size: 20px;
+          margin: 5px 0;
+        }
+      &.now {
+        display: none;
+      }
+      }
+    }
+    .take {
+      .cityChose {
+        height: 150px;
+        padding: 15px;
+        border: 1px solid;
+        margin: 10px 0;
+        border-radius: 10px;
+        overflow: auto;
+       li {
+        background-color: #00000030;
+        display: inline-block;
+        padding: 5px;
+        border-radius: 6px;
+        color: white;
+        cursor: pointer;
+        margin: 2px 1px;
+        transition: 0.3s ;
+        &.active ,
+        &:hover {
+          background-color: #000000c9;
+        }
+       }
+      }
+    }
+    .cntrol {
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-end;
+      gap: 5px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+      > div {
+        align-items: center;
+        width: 30%;
+        @media (max-width: 575px) {
+         width: 45%;
+        }
+        h2 {
+          font-size: 25px;
+           margin-bottom: 10px;
+        }
+        select {
+          width: 100%;
+          overflow: hidden;
+          height: 30px;
+          padding: 5px 10px;
+          border-radius: 8px;
+        }
+      }
+    }
+    button {
+      width: 115px;
+      overflow: hidden;
+      height: 30px;
+      padding: 5px 10px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      margin: 20px;
+    }
+  }
+}
+
+/* End Time */
+/* Start Week */
+.week {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  table {
+    border-collapse: collapse;
+    td ,th {
+      border: 2px solid rgba(255, 255, 255, 0.634);
+      padding: 5px 4px;
+      @media (max-width: 575px) {
+        font-size: 10px;
+      }
+    }
+    tr.active {
+      background-color: rgba(255, 255, 255, 0.634);
+      color: rgba(0, 0, 0, 0.637);
+    }
+  }
+}
+/* End Week */
+/* End Project */

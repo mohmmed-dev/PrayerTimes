@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PrayerTimes</title>
+    <link rel="stylesheet" href="./style.css" />
+    <script src="./node_modules/axios/dist/axios.js"></script>
+  </head>
+  <body>
+    <!-- Start Project -->
+    <div class="container">
+      <div class="time">
+        <div class="inf">
+          <div class="taxt">
+            <h1 class="ctiyNmae">Mecca</h1>
+            <h3 class="countryNmae">Saudi Arabia</h3>
+          </div>
+          <div class="date"></div>
+        </div>
+        <!-- Start Today -->
+        <div class="time_today">
+          <div class="show">
+            <div id="Fajr">
+              <img src="./img/sunrise.png" alt="Fajr" />
+              <h3>Fajr</h3>
+              <h4>00:00</h4>
+            </div>
+            <div id="Sunrise">
+              <img src="./img/sunt.png" alt="Sunrise" />
+              <h3>Sunrise</h3>
+              <h4>00:00</h4>
+            </div>
+            <div id="Dhuhr">
+              <img src="./img/sun.png" alt="Dhuhr" />
+              <h3>Dhuhr</h3>
+              <h4>00:00</h4>
+            </div>
+            <div id="Asr">
+              <img src="./img/sunset.png" alt="Asr" />
+              <h3>Asr</h3>
+              <h4>00:00</h4>
+            </div>
+            <div id="Maghrib">
+              <img src="./img/sunset-.png" alt="Maghrib" />
+              <h3>Maghrib</h3>
+              <h4>7:50</h4>
+            </div>
+            <div id="Isha">
+              <img src="./img/night.png" alt="Isha" />
+              <h3>Isha</h3>
+              <h4>00:00</h4>
+            </div>
+          </div>
+          <div class="take">
+            <ul class="cityChose"></ul>
+          </div>
+          <div class="cntrol">
+            <div>
+              <h2>Method</h2>
+              <select id="method">
+                <option value="0">Shia Ithna-Ashari</option>
+                <option value="1">
+                  University of Islamic Sciences, Karachi
+                </option>
+                <option value="2">Islamic Society of North America</option>
+                <option value="3">Muslim World League</option>
+                <option value="4">Umm Al-Qura University, Makkah</option>
+                <option value="5">Egyptian General Authority of Survey</option>
+                <option value="7">
+                  Institute of Geophysics, University of Tehran
+                </option>
+                <option value="8">Gulf Region</option>
+                <option value="9">Kuwait</option>
+                <option value="10">Qatar</option>
+                <option value="11">
+                  Majlis Ugama Islam Singapura, Singapore
+                </option>
+                <option value="12">Union Organization islamic de France</option>
+                <option value="13">Diyanet İşleri Başkanlığı, Turkey</option>
+                <option value="14">
+                  Spiritual Administration of Muslims of Russia
+                </option>
+                <option value="15">
+                  Moonsighting Committee Worldwide (also requires shafaq
+                  parameter)
+                </option>
+                <option value="16">Dubai (unofficial)</option>
+                <option value=""></option>
+              </select>
+            </div>
+            <div>
+              <h2>country</h2>
+              <select id="city"></select>
+            </div>
+            <button id="submit">submit</button>
+          </div>
+        </div>
+        <!-- End Today -->
+      </div>
+      <!-- Start Week -->
+      <div class="week">
+        <table>
+          <thead>
+            <tr>
+              <th>date</th>
+              <th>Fajr</th>
+              <th>Sunrise</th>
+              <th>Dhuhr</th>
+              <th>Sunrise</th>
+              <th>Maghrib</th>
+              <th>Isha</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <!-- End Week -->
+    </div>
+    <!-- End Project -->
+    <script>
+      // Element Var
+      let elementCity = document.getElementById("city");
+      let elementMethod = document.getElementById("method");
+      let elementUlCityChose = document.querySelector(".cityChose");
+      let elementButton = document.getElementById("submit");
+      let elementTbodyWeek = document.querySelector("table tbody");
+      let elementDate = document.querySelector(".date");
+      let allTimings = ["Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"];
+
+      elementButton.addEventListener("click", () => {
+        let elementLiActive = document.querySelector(".cityChose li.active");
+        let elementLiActivee = document.querySelector(".cityChose li.active");
+        aldhan(elementLiActive.id, method.value);
+      });
+
+      function aldhan(elementId, methodValue) {
+        axios
+          .get(
+            ` http://api.aladhan.com/v1/timingsByCity?city=${elementId}&country=&method=${methodValue}`
+          )
+          .then(function (response) {
+            // handle success
+            let apiResponse = response.data.data;
+            elementDate.innerHTML = `
+            <h2>${apiResponse.date.gregorian.day} ${apiResponse.date.gregorian.weekday.en}</h2>
+            <h3>${apiResponse.date.gregorian.month.number} ${apiResponse.date.gregorian.month.en}</h3>
+            <h4>${apiResponse.date.gregorian.year}</h4>
+            `;
+            allTimings.forEach((time) => {
+              document.querySelector(`#${time} h4`).innerHTML =
+                apiResponse.timings[time];
+            });
+            let responseTime = apiResponse.date;
+            axios
+              .get(
+                `https://api.aladhan.com/v1/calendarByCity/${responseTime.gregorian.year}/${responseTime.gregorian.month.number}?city=${elementId}&country=&method=${methodValue}`
+              )
+              .then((response) => {
+                elementTbodyWeek.innerHTML = "";
+                function removeNumber(number) {
+                  return number.slice(0, 5);
+                }
+                for (day of response.data.data) {
+                  elementTbodyWeek.innerHTML += `
+                  <tr class="${
+                    Number(day.date.gregorian.day) == responseTime.gregorian.day
+                      ? "active"
+                      : ""
+                  }">
+                    <td>${day.date.gregorian.day}</td>
+                    <td>${removeNumber(day.timings.Fajr)}</td>
+                    <td>${removeNumber(day.timings.Sunrise)}</td>
+                    <td>${removeNumber(day.timings.Dhuhr)}</td>
+                    <td>${removeNumber(day.timings.Asr)}</td>
+                    <td>${removeNumber(day.timings.Maghrib)}</td>
+                    <td>${removeNumber(day.timings.Isha)}</td>
+                  </tr>
+                  `;
+                }
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+          })
+          .catch(function (error) {
+            // handle error
+            console.log(error);
+          });
+      }
+
+      // Api Get Countries Of World https://countriesnow.space/api/v0.1/countries
+      function removeActive(elements) {
+        for (element of elements) {
+          element.classList.remove("active");
+        }
+      }
+      function addLiCtiy(element, take) {
+        elementUlCityChose.innerHTML = "";
+        let liCity = document.createElement("li");
+        element.cities.forEach((ctiy) => {
+          let liCity = document.createElement("li");
+          liCity.id = ctiy;
+          liCity.innerText = ctiy;
+          take(liCity);
+          elementUlCityChose.appendChild(liCity);
+        });
+        for (li of elementUlCityChose.children) {
+          li.addEventListener("click", (ele) => {
+            removeActive(elementUlCityChose.children);
+            document.querySelector(".ctiyNmae").innerHTML = ele.target.id;
+            ele.target.classList.add("active");
+          });
+        }
+      }
+      axios
+        .get("https://countriesnow.space/api/v0.1/countries/")
+        .then(function (response) {
+          console.log("me");
+          let saveApiCountries = response.data;
+          saveApiCountries.data.forEach((element) => {
+            let optionCity = document.createElement("option");
+            optionCity.value = element.iso3;
+            optionCity.innerText = element.country;
+            if (element.iso3 == "SAU") {
+              optionCity.selected = "selected";
+              addLiCtiy(element, function (ctiy) {
+                if (ctiy.id == "Mecca") {
+                  ctiy.className = "active";
+                }
+              });
+              aldhan(element.country, 0);
+            }
+            elementCity.appendChild(optionCity);
+            elementCity.addEventListener("change", function () {
+              if (elementCity.value === element.iso3) {
+                addLiCtiy(element, function () {});
+                document.querySelector(".countryNmae").innerHTML =
+                  element.country;
+              }
+            });
+          });
+        })
+        .catch(function (error) {
+          // handle error
+          console.log(error);
+        })
+        .finally(function () {
+          // always executed
+        });
+    </script>
+  </body>
+</html>
